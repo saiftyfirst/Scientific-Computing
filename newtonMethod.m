@@ -1,0 +1,3 @@
+function newtonMethod()
+
+end
