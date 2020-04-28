@@ -1,12 +1,24 @@
-function result = gauss_seidel(b, Nx, Ny)
- 
+function T = implicit_euler(Nx, Ny, dt, t_end)
     tolerence = 1e-4;
+    
+    T = ones(Nx * Ny, 1);
+    T = vector_padding(T, Nx, Ny);
+    
+    hx_invsquared = - ((Nx + 1) ^ 2) * dt;
+    hy_invsquared = - ((Ny + 1) ^ 2) * dt;
+    invsq_denominator = 1 + ((2 * (((Nx + 1) ^ 2) + ((Nx + 1) ^ 2))) * dt);
+    
+    for i = 0:dt:t_end
+        T = gauss_seidel(T, Nx, Ny, hx_invsquared, hy_invsquared, invsq_denominator, tolerence);
+    end    
+    
+end
+
+function result = gauss_seidel(b, Nx, Ny, hx_invsquared, hy_invsquared, invsq_denominator, tolerence)
+ 
     residual = Inf;
 
     result = zeros((Nx + 2) * (Ny + 2), 1);
-    hx_invsquared = (Nx + 1) ^ 2;
-    hy_invsquared = (Ny + 1) ^ 2;
-    invsq_denominator = - 2 * (hx_invsquared + hy_invsquared);
     
     Nx_padded = Nx + 2;
     Ny_padded = Ny + 2;
